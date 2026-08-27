@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#082b67">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Salud Digestiva">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="icon" href="icon-192.png">
+<title>Instalar Salud Digestiva</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;font-family:Arial,Helvetica,sans-serif;background:#f8fafc;color:#082b67}
+body{display:grid;place-items:center;padding:22px}
+.card{width:min(100%,430px);background:#fff;border:1px solid #e7ebf0;border-radius:24px;
+box-shadow:0 14px 40px rgba(8,43,103,.12);padding:26px;text-align:center}
+.logo{width:132px;height:132px;object-fit:contain;margin:0 auto 12px}
+h1{font-size:29px;line-height:1.05;margin:0 0 8px}
+.tag{font-size:16px;color:#536179;margin:0 0 22px}
+.install{border:0;border-radius:28px;background:#ff6816;color:#fff;width:100%;padding:15px 18px;
+font-size:17px;font-weight:800;cursor:pointer;box-shadow:0 7px 18px rgba(255,104,22,.22)}
+.install:disabled{opacity:.55}
+.open{display:block;margin-top:12px;text-decoration:none;border:1px solid #dce3eb;border-radius:28px;
+color:#082b67;padding:13px 18px;font-weight:700;background:#fff}
+.status{margin:16px 0 0;color:#657187;font-size:13px;line-height:1.35;min-height:36px}
+</style>
+</head>
+<body>
+<main class="card">
+<img class="logo" src="icon-512.png" alt="Salud Digestiva">
+<h1>Salud Digestiva</h1>
+<p class="tag">Acceso rápido a nuestros medios de contacto</p>
+<button id="installBtn" class="install" disabled>Preparando instalación…</button>
+<a class="open" href="https://sites.google.com/view/saluddigestivacbba/p%C3%A1gina-principal">Abrir Salud Digestiva</a>
+<p id="status" class="status">Verificando si su navegador permite agregar el acceso directo.</p>
+</main>
+
+<script>
+const DESTINO = "https://sites.google.com/view/saluddigestivacbba/p%C3%A1gina-principal";
+const params = new URLSearchParams(location.search);
+
+if (params.get("launch") === "1") {
+  location.replace(DESTINO);
+}
+
+let deferredPrompt = null;
+const btn = document.getElementById("installBtn");
+const status = document.getElementById("status");
+
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => navigator.serviceWorker.register("./service-worker.js").catch(()=>{}));
+}
+
+window.addEventListener("beforeinstallprompt", (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
+  btn.disabled = false;
+  btn.textContent = "Agregar a pantalla";
+  status.textContent = "Listo. Toque el botón y luego confirme.";
+});
+
+btn.addEventListener("click", async () => {
+  if (!deferredPrompt) {
+    status.innerHTML = "Si Chrome no muestra la confirmación automática, use el menú <b>⋮</b> y elija <b>Agregar a pantalla principal</b>.";
+    return;
+  }
+  deferredPrompt.prompt();
+  const choice = await deferredPrompt.userChoice;
+  deferredPrompt = null;
+  if (choice.outcome === "accepted") {
+    btn.textContent = "Agregado ✓";
+    btn.disabled = true;
+    status.textContent = "Salud Digestiva fue agregada a la pantalla de inicio.";
+  } else {
+    btn.textContent = "Agregar a pantalla";
+    btn.disabled = false;
+    status.textContent = "Puede intentarlo nuevamente.";
+  }
+});
+
+window.addEventListener("appinstalled", () => {
+  btn.textContent = "Agregado ✓";
+  btn.disabled = true;
+  status.textContent = "Salud Digestiva ya está disponible desde la pantalla de inicio.";
+});
+
+setTimeout(() => {
+  if (!deferredPrompt && !params.get("launch")) {
+    btn.disabled = false;
+    btn.textContent = "Agregar a pantalla";
+    status.textContent = "Toque el botón para intentar agregar el acceso.";
+  }
+}, 1800);
+</script>
+</body>
+</html>

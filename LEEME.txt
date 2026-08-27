@@ -1,0 +1,5 @@
+SALUD DIGESTIVA — INSTALADOR V2
+Icono oficial: hígado + vesícula + estómago + mano.
+
+Publicar todos estos archivos juntos en un hosting HTTPS.
+Después, usar la URL pública resultante en el botón “Agregar a pantalla” del BLOQUE D.
