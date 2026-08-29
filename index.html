@@ -28,7 +28,7 @@
 
 <!-- =========================================================
      APERTURA DESDE EL ICONO INSTALADO
-     Se ejecuta antes de mostrar el instalador
+     Antes de mostrar cualquier contenido
      ========================================================= -->
 
 <script>
@@ -51,24 +51,11 @@
 </script>
 
 
-<link
-  rel="manifest"
-  href="manifest.webmanifest"
->
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="icon" href="icon-192.png">
 
-<link
-  rel="apple-touch-icon"
-  href="icon-192.png"
->
-
-<link
-  rel="icon"
-  href="icon-192.png"
->
-
-<title>
-  Instalar Salud Digestiva
-</title>
+<title>Instalar Salud Digestiva</title>
 
 
 <style>
@@ -79,167 +66,99 @@
 
 html,
 body{
-
   margin:0;
-
   min-height:100%;
-
-  font-family:
-    Arial,
-    Helvetica,
-    sans-serif;
-
+  font-family:Arial,Helvetica,sans-serif;
   background:#f8fafc;
-
   color:#082b67;
-
 }
-
 
 body{
-
   display:grid;
-
   place-items:center;
-
   padding:22px;
-
 }
-
 
 .card{
-
   width:min(100%,430px);
-
   background:#fff;
-
-  border:
-    1px solid #e7ebf0;
-
+  border:1px solid #e7ebf0;
   border-radius:24px;
-
-  box-shadow:
-    0 14px 40px
-    rgba(8,43,103,.12);
-
+  box-shadow:0 14px 40px rgba(8,43,103,.12);
   padding:26px;
-
   text-align:center;
-
 }
-
 
 .logo{
-
   width:132px;
-
   height:132px;
-
   object-fit:contain;
-
-  margin:
-    0 auto 12px;
-
+  margin:0 auto 12px;
 }
-
 
 h1{
-
   font-size:29px;
-
   line-height:1.05;
-
-  margin:
-    0 0 8px;
-
+  margin:0 0 8px;
 }
-
 
 .tag{
-
   font-size:16px;
-
   color:#536179;
-
-  margin:
-    0 0 22px;
-
+  margin:0 0 22px;
 }
-
 
 .install{
-
   border:0;
-
   border-radius:28px;
-
   background:#ff6816;
-
   color:#fff;
-
   width:100%;
-
-  padding:
-    15px 18px;
-
+  padding:15px 18px;
   font-size:17px;
-
   font-weight:800;
-
   cursor:pointer;
-
-  box-shadow:
-    0 7px 18px
-    rgba(255,104,22,.22);
-
+  box-shadow:0 7px 18px rgba(255,104,22,.22);
+  transition:
+    background .25s ease,
+    opacity .25s ease;
 }
-
 
 .install:disabled{
-
-  opacity:.55;
-
+  cursor:default;
 }
 
+/* Mientras realmente se está instalando */
+.install.installing{
+  background:#e85f15;
+  opacity:1;
+}
+
+/* Instalación confirmada */
+.install.done{
+  background:#18864b;
+  opacity:1;
+  box-shadow:0 7px 18px rgba(24,134,75,.20);
+}
 
 .open{
-
   display:block;
-
   margin-top:12px;
-
   text-decoration:none;
-
-  border:
-    1px solid #dce3eb;
-
+  border:1px solid #dce3eb;
   border-radius:28px;
-
   color:#082b67;
-
-  padding:
-    13px 18px;
-
+  padding:13px 18px;
   font-weight:700;
-
   background:#fff;
-
 }
 
-
 .status{
-
-  margin:
-    16px 0 0;
-
+  margin:16px 0 0;
   color:#657187;
-
   font-size:13px;
-
   line-height:1.35;
-
   min-height:36px;
-
 }
 
 </style>
@@ -249,9 +168,7 @@ h1{
 
 <body>
 
-
 <main class="card">
-
 
 <img
   class="logo"
@@ -259,100 +176,74 @@ h1{
   alt="Salud Digestiva"
 >
 
-
 <h1>
   Salud Digestiva
 </h1>
 
-
 <p class="tag">
-
   Acceso rápido a nuestros medios de contacto
-
 </p>
-
 
 <button
   id="installBtn"
   class="install"
   disabled
 >
-
   Preparando instalación…
-
 </button>
-
 
 <a
   class="open"
   href="https://sites.google.com/view/saluddigestivacbba/p%C3%A1gina-principal"
 >
-
   Abrir Salud Digestiva
-
 </a>
-
 
 <p
   id="status"
   class="status"
 >
-
   Verificando si su navegador permite agregar el acceso directo.
-
 </p>
-
 
 </main>
 
 
-
 <script>
-
 
 const DESTINO =
 "https://sites.google.com/view/saluddigestivacbba/p%C3%A1gina-principal";
 
 
-let deferredPrompt =
-null;
+let deferredPrompt = null;
+
+let instalacionEnProceso = false;
+
+let momentoInicio = 0;
+
+let temporizadorRespaldo = null;
 
 
 const btn =
-document.getElementById(
-  "installBtn"
-);
-
+document.getElementById("installBtn");
 
 const status =
-document.getElementById(
-  "status"
-);
-
+document.getElementById("status");
 
 
 /* =========================================================
    SERVICE WORKER
    ========================================================= */
 
-
-if(
-  "serviceWorker"
-  in navigator
-){
+if("serviceWorker" in navigator){
 
   window.addEventListener(
     "load",
     () => {
 
-      navigator
-        .serviceWorker
-        .register(
-          "./service-worker.js"
-        )
-        .catch(
-          () => {}
-        );
+      navigator.serviceWorker
+        .register("./service-worker.js")
+        .catch(() => {});
 
     }
   );
@@ -360,11 +251,9 @@ if(
 }
 
 
-
 /* =========================================================
    INSTALACIÓN DISPONIBLE
    ========================================================= */
-
 
 window.addEventListener(
   "beforeinstallprompt",
@@ -372,11 +261,9 @@ window.addEventListener(
 
     event.preventDefault();
 
-    deferredPrompt =
-      event;
+    deferredPrompt = event;
 
-    btn.disabled =
-      false;
+    btn.disabled = false;
 
     btn.textContent =
       "Agregar a pantalla";
@@ -388,20 +275,15 @@ window.addEventListener(
 );
 
 
-
 /* =========================================================
    BOTÓN AGREGAR A PANTALLA
    ========================================================= */
-
 
 btn.addEventListener(
   "click",
   async () => {
 
-
-    if(
-      !deferredPrompt
-    ){
+    if(!deferredPrompt){
 
       status.innerHTML =
         "Si Chrome no muestra la confirmación automática, " +
@@ -415,136 +297,199 @@ btn.addEventListener(
 
     try{
 
-
-      /*
-        Guardamos el evento antes
-        de utilizarlo.
-      */
-
       const promptInstalacion =
         deferredPrompt;
 
+      deferredPrompt = null;
 
-      deferredPrompt =
-        null;
+      momentoInicio =
+        Date.now();
 
-
-      /*
-        Chrome muestra su cuadro
-        de instalación.
-      */
 
       const resultado =
         await promptInstalacion.prompt();
 
 
-      /*
-        SI EL USUARIO ACEPTÓ:
+      if(resultado.outcome === "accepted"){
 
-        No esperamos appinstalled.
-        No usamos temporizadores.
+        /*
+          El usuario aceptó.
 
-        Salimos inmediatamente del
-        instalador hacia Salud Digestiva.
-      */
+          IMPORTANTE:
+          Todavía NO mostramos "Instalado".
+          Esperamos appinstalled.
+        */
 
+        instalacionEnProceso = true;
 
-      if(
-        resultado.outcome
-        === "accepted"
-      ){
+        btn.disabled = true;
+
+        btn.classList.add("installing");
 
         btn.textContent =
-          "Instalado ✓";
-
-        btn.disabled =
-          true;
+          "Instalando…";
 
         status.textContent =
-          "Instalación completada. Abriendo Salud Digestiva…";
+          "Espere un momento mientras finalizamos la instalación.";
 
 
-        location.replace(
-          DESTINO
-        );
+        /*
+          RESPALDO:
 
+          Algunos navegadores pueden no entregar
+          appinstalled de forma consistente.
 
-        return;
+          Si después de 10 segundos no llegó el evento,
+          continuamos sin afirmar que la instalación
+          terminó exactamente en ese instante.
+        */
+
+        temporizadorRespaldo =
+          setTimeout(
+            () => {
+
+              if(!instalacionEnProceso){
+                return;
+              }
+
+              status.textContent =
+                "Instalación aceptada. Abriendo Salud Digestiva…";
+
+              setTimeout(
+                () => location.replace(DESTINO),
+                900
+              );
+
+            },
+            10000
+          );
 
       }
+      else{
 
+        btn.disabled = false;
 
-      /*
-        SI CANCELÓ
-      */
+        btn.classList.remove("installing");
 
+        btn.textContent =
+          "Agregar a pantalla";
 
-      btn.textContent =
-        "Agregar a pantalla";
+        status.textContent =
+          "Puede intentarlo nuevamente.";
 
-      btn.disabled =
-        false;
-
-      status.textContent =
-        "Puede intentarlo nuevamente.";
-
+      }
 
     }
     catch(error){
 
+      btn.disabled = false;
+
+      btn.classList.remove("installing");
 
       btn.textContent =
         "Agregar a pantalla";
 
-      btn.disabled =
-        false;
-
       status.textContent =
         "No se pudo completar automáticamente. Puede intentarlo nuevamente.";
 
-
     }
-
 
   }
 );
 
 
-
 /* =========================================================
-   RESPALDO:
-   INSTALACIÓN REALIZADA POR OTRO MÉTODO
+   INSTALACIÓN REALMENTE COMPLETADA
    ========================================================= */
-
 
 window.addEventListener(
   "appinstalled",
   () => {
 
-    location.replace(
-      DESTINO
+    instalacionEnProceso = false;
+
+    if(temporizadorRespaldo){
+
+      clearTimeout(
+        temporizadorRespaldo
+      );
+
+    }
+
+
+    /*
+      Queremos que "Instalando…"
+      permanezca visible como mínimo un instante,
+      incluso si Android instala extremadamente rápido.
+    */
+
+    const tiempoTranscurrido =
+      Date.now() - momentoInicio;
+
+    const esperaMinima =
+      Math.max(
+        0,
+        1200 - tiempoTranscurrido
+      );
+
+
+    setTimeout(
+      () => {
+
+        btn.disabled = true;
+
+        btn.classList.remove(
+          "installing"
+        );
+
+        btn.classList.add(
+          "done"
+        );
+
+        btn.textContent =
+          "Instalado ✓";
+
+        status.textContent =
+          "Instalación completada. Abriendo Salud Digestiva…";
+
+
+        /*
+          Mostramos claramente la confirmación
+          antes de abandonar el instalador.
+        */
+
+        setTimeout(
+          () => {
+
+            location.replace(
+              DESTINO
+            );
+
+          },
+          1100
+        );
+
+      },
+      esperaMinima
     );
 
   }
 );
 
 
-
 /* =========================================================
-   RESPALDO SI CHROME TARDA EN PREPARAR
-   LA INSTALACIÓN
+   RESPALDO DURANTE LA PREPARACIÓN
    ========================================================= */
-
 
 setTimeout(
   () => {
 
     if(
-      !deferredPrompt
+      !deferredPrompt &&
+      !instalacionEnProceso
     ){
 
-      btn.disabled =
-        false;
+      btn.disabled = false;
 
       btn.textContent =
         "Agregar a pantalla";
@@ -558,9 +503,7 @@ setTimeout(
   1800
 );
 
-
 </script>
-
 
 </body>
 
