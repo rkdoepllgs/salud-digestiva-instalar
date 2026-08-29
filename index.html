@@ -1,230 +1,382 @@
 <!doctype html>
 <html lang="es">
+
 <head>
+
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#082b67">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="Salud Digestiva">
+
+<meta
+  name="viewport"
+  content="width=device-width,initial-scale=1,viewport-fit=cover"
+>
+
+<meta
+  name="theme-color"
+  content="#082b67"
+>
+
+<meta
+  name="apple-mobile-web-app-capable"
+  content="yes"
+>
+
+<meta
+  name="apple-mobile-web-app-title"
+  content="Salud Digestiva"
+>
+
 
 <!-- =========================================================
-     ARRANQUE DESDE EL ICONO INSTALADO
-     Se ejecuta ANTES de dibujar la pantalla del instalador
+     APERTURA DESDE EL ICONO INSTALADO
+     Se ejecuta antes de mostrar el instalador
      ========================================================= -->
-<script>
-(function () {
-  const params = new URLSearchParams(location.search);
 
-  if (params.get("launch") === "1") {
+<script>
+
+(function(){
+
+  const params =
+    new URLSearchParams(location.search);
+
+  if(params.get("launch") === "1"){
+
     location.replace(
       "https://sites.google.com/view/saluddigestivacbba/p%C3%A1gina-principal"
     );
+
   }
+
 })();
+
 </script>
 
-<link rel="manifest" href="manifest.webmanifest">
-<link rel="apple-touch-icon" href="icon-192.png">
-<link rel="icon" href="icon-192.png">
 
-<title>Instalar Salud Digestiva</title>
+<link
+  rel="manifest"
+  href="manifest.webmanifest"
+>
+
+<link
+  rel="apple-touch-icon"
+  href="icon-192.png"
+>
+
+<link
+  rel="icon"
+  href="icon-192.png"
+>
+
+<title>
+  Instalar Salud Digestiva
+</title>
+
 
 <style>
+
 *{
   box-sizing:border-box;
 }
 
-html,body{
+html,
+body{
+
   margin:0;
+
   min-height:100%;
-  font-family:Arial,Helvetica,sans-serif;
+
+  font-family:
+    Arial,
+    Helvetica,
+    sans-serif;
+
   background:#f8fafc;
+
   color:#082b67;
+
 }
+
 
 body{
+
   display:grid;
+
   place-items:center;
+
   padding:22px;
+
 }
+
 
 .card{
+
   width:min(100%,430px);
+
   background:#fff;
-  border:1px solid #e7ebf0;
+
+  border:
+    1px solid #e7ebf0;
+
   border-radius:24px;
-  box-shadow:0 14px 40px rgba(8,43,103,.12);
+
+  box-shadow:
+    0 14px 40px
+    rgba(8,43,103,.12);
+
   padding:26px;
+
   text-align:center;
+
 }
+
 
 .logo{
+
   width:132px;
+
   height:132px;
+
   object-fit:contain;
-  margin:0 auto 12px;
+
+  margin:
+    0 auto 12px;
+
 }
+
 
 h1{
+
   font-size:29px;
+
   line-height:1.05;
-  margin:0 0 8px;
+
+  margin:
+    0 0 8px;
+
 }
+
 
 .tag{
+
   font-size:16px;
+
   color:#536179;
-  margin:0 0 22px;
+
+  margin:
+    0 0 22px;
+
 }
+
 
 .install{
+
   border:0;
+
   border-radius:28px;
+
   background:#ff6816;
+
   color:#fff;
+
   width:100%;
-  padding:15px 18px;
+
+  padding:
+    15px 18px;
+
   font-size:17px;
+
   font-weight:800;
+
   cursor:pointer;
-  box-shadow:0 7px 18px rgba(255,104,22,.22);
-  transition:.2s ease;
+
+  box-shadow:
+    0 7px 18px
+    rgba(255,104,22,.22);
+
 }
+
 
 .install:disabled{
-  cursor:default;
-}
 
-.install.waiting{
   opacity:.55;
+
 }
 
-.install.done{
-  background:#18864b;
-  opacity:1;
-  box-shadow:0 7px 18px rgba(24,134,75,.20);
-}
 
 .open{
+
   display:block;
+
   margin-top:12px;
+
   text-decoration:none;
-  border:1px solid #dce3eb;
+
+  border:
+    1px solid #dce3eb;
+
   border-radius:28px;
+
   color:#082b67;
-  padding:13px 18px;
+
+  padding:
+    13px 18px;
+
   font-weight:700;
+
   background:#fff;
+
 }
 
+
 .status{
-  margin:16px 0 0;
+
+  margin:
+    16px 0 0;
+
   color:#657187;
+
   font-size:13px;
+
   line-height:1.35;
+
   min-height:36px;
+
 }
+
 </style>
+
 </head>
+
 
 <body>
 
+
 <main class="card">
 
-  <img
-    class="logo"
-    src="icon-512.png"
-    alt="Salud Digestiva"
-  >
 
-  <h1>Salud Digestiva</h1>
+<img
+  class="logo"
+  src="icon-512.png"
+  alt="Salud Digestiva"
+>
 
-  <p class="tag">
-    Acceso rápido a nuestros medios de contacto
-  </p>
 
-  <button
-    id="installBtn"
-    class="install waiting"
-    disabled
-  >
-    Preparando instalación…
-  </button>
+<h1>
+  Salud Digestiva
+</h1>
 
-  <a
-    class="open"
-    href="https://sites.google.com/view/saluddigestivacbba/p%C3%A1gina-principal"
-  >
-    Abrir Salud Digestiva
-  </a>
 
-  <p
-    id="status"
-    class="status"
-  >
-    Verificando si su navegador permite agregar el acceso directo.
-  </p>
+<p class="tag">
+
+  Acceso rápido a nuestros medios de contacto
+
+</p>
+
+
+<button
+  id="installBtn"
+  class="install"
+  disabled
+>
+
+  Preparando instalación…
+
+</button>
+
+
+<a
+  class="open"
+  href="https://sites.google.com/view/saluddigestivacbba/p%C3%A1gina-principal"
+>
+
+  Abrir Salud Digestiva
+
+</a>
+
+
+<p
+  id="status"
+  class="status"
+>
+
+  Verificando si su navegador permite agregar el acceso directo.
+
+</p>
+
 
 </main>
 
+
+
 <script>
+
 
 const DESTINO =
 "https://sites.google.com/view/saluddigestivacbba/p%C3%A1gina-principal";
 
-let deferredPrompt = null;
-let temporizadorApertura = null;
+
+let deferredPrompt =
+null;
+
 
 const btn =
-document.getElementById("installBtn");
+document.getElementById(
+  "installBtn"
+);
+
 
 const status =
-document.getElementById("status");
+document.getElementById(
+  "status"
+);
+
 
 
 /* =========================================================
    SERVICE WORKER
    ========================================================= */
 
-if ("serviceWorker" in navigator) {
 
-  window.addEventListener("load", () => {
+if(
+  "serviceWorker"
+  in navigator
+){
 
-    navigator.serviceWorker
-      .register("./service-worker.js")
-      .catch(() => {});
+  window.addEventListener(
+    "load",
+    () => {
 
-  });
+      navigator
+        .serviceWorker
+        .register(
+          "./service-worker.js"
+        )
+        .catch(
+          () => {}
+        );
+
+    }
+  );
 
 }
 
 
-/* =========================================================
-   FUNCIÓN PARA ABRIR SALUD DIGESTIVA
-   ========================================================= */
-
-function abrirSaludDigestiva(){
-
-  location.replace(DESTINO);
-
-}
-
 
 /* =========================================================
-   CHROME PERMITE INSTALACIÓN
+   INSTALACIÓN DISPONIBLE
    ========================================================= */
+
 
 window.addEventListener(
   "beforeinstallprompt",
-  (e) => {
+  event => {
 
-    e.preventDefault();
+    event.preventDefault();
 
-    deferredPrompt = e;
+    deferredPrompt =
+      event;
 
-    btn.disabled = false;
-
-    btn.classList.remove("waiting");
+    btn.disabled =
+      false;
 
     btn.textContent =
       "Agregar a pantalla";
@@ -236,15 +388,20 @@ window.addEventListener(
 );
 
 
+
 /* =========================================================
-   BOTÓN INSTALAR
+   BOTÓN AGREGAR A PANTALLA
    ========================================================= */
+
 
 btn.addEventListener(
   "click",
   async () => {
 
-    if (!deferredPrompt) {
+
+    if(
+      !deferredPrompt
+    ){
 
       status.innerHTML =
         "Si Chrome no muestra la confirmación automática, " +
@@ -255,117 +412,139 @@ btn.addEventListener(
 
     }
 
+
     try{
 
-      deferredPrompt.prompt();
 
-      const choice =
-        await deferredPrompt.userChoice;
+      /*
+        Guardamos el evento antes
+        de utilizarlo.
+      */
 
-      deferredPrompt = null;
+      const promptInstalacion =
+        deferredPrompt;
 
-      if (choice.outcome === "accepted") {
 
-        btn.disabled = true;
+      deferredPrompt =
+        null;
 
-        btn.classList.remove("waiting");
+
+      /*
+        Chrome muestra su cuadro
+        de instalación.
+      */
+
+      const resultado =
+        await promptInstalacion.prompt();
+
+
+      /*
+        SI EL USUARIO ACEPTÓ:
+
+        No esperamos appinstalled.
+        No usamos temporizadores.
+
+        Salimos inmediatamente del
+        instalador hacia Salud Digestiva.
+      */
+
+
+      if(
+        resultado.outcome
+        === "accepted"
+      ){
 
         btn.textContent =
-          "Instalando…";
+          "Instalado ✓";
+
+        btn.disabled =
+          true;
 
         status.textContent =
-          "Instalación aceptada. Estamos finalizando.";
+          "Instalación completada. Abriendo Salud Digestiva…";
 
-        /*
-          RESPALDO:
-          si Android no emite appinstalled por algún motivo,
-          igualmente continuamos a Salud Digestiva.
-        */
 
-        temporizadorApertura =
-          setTimeout(
-            abrirSaludDigestiva,
-            3000
-          );
+        location.replace(
+          DESTINO
+        );
 
-      }else{
 
-        btn.disabled = false;
-
-        btn.textContent =
-          "Agregar a pantalla";
-
-        status.textContent =
-          "Puede intentarlo nuevamente.";
+        return;
 
       }
 
-    }catch(error){
 
-      btn.disabled = false;
+      /*
+        SI CANCELÓ
+      */
+
 
       btn.textContent =
         "Agregar a pantalla";
 
+      btn.disabled =
+        false;
+
+      status.textContent =
+        "Puede intentarlo nuevamente.";
+
+
+    }
+    catch(error){
+
+
+      btn.textContent =
+        "Agregar a pantalla";
+
+      btn.disabled =
+        false;
+
       status.textContent =
         "No se pudo completar automáticamente. Puede intentarlo nuevamente.";
 
+
     }
+
 
   }
 );
 
 
+
 /* =========================================================
-   INSTALACIÓN TERMINADA REALMENTE
+   RESPALDO:
+   INSTALACIÓN REALIZADA POR OTRO MÉTODO
    ========================================================= */
+
 
 window.addEventListener(
   "appinstalled",
   () => {
 
-    if (temporizadorApertura) {
-      clearTimeout(temporizadorApertura);
-    }
-
-    btn.disabled = true;
-
-    btn.classList.remove("waiting");
-
-    btn.classList.add("done");
-
-    btn.textContent =
-      "Instalado ✓";
-
-    status.textContent =
-      "Instalación completada. Abriendo Salud Digestiva…";
-
-    /*
-      Se deja visible la confirmación solo un instante,
-      para que el usuario vea claramente que terminó.
-    */
-
-    setTimeout(
-      abrirSaludDigestiva,
-      650
+    location.replace(
+      DESTINO
     );
 
   }
 );
 
 
+
 /* =========================================================
-   RESPALDO SI CHROME TARDA EN ENTREGAR beforeinstallprompt
+   RESPALDO SI CHROME TARDA EN PREPARAR
+   LA INSTALACIÓN
    ========================================================= */
+
 
 setTimeout(
   () => {
 
-    if (!deferredPrompt) {
+    if(
+      !deferredPrompt
+    ){
 
-      btn.disabled = false;
-
-      btn.classList.remove("waiting");
+      btn.disabled =
+        false;
 
       btn.textContent =
         "Agregar a pantalla";
@@ -379,7 +558,10 @@ setTimeout(
   1800
 );
 
+
 </script>
 
+
 </body>
+
 </html>
