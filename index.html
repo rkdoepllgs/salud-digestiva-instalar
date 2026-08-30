@@ -40,9 +40,45 @@
 
   if(params.get("launch") === "1"){
 
-    location.replace(
-      "https://salud-digestiva.rkdoepllgs.workers.dev/?app=1"
-    );
+    /*
+      La app instalada NO visita la página visible del Worker.
+      Solo consulta el archivo central destino.js.
+      Así se conserva la pantalla inicial con el icono
+      y se evita por completo la tarjeta intermedia.
+    */
+
+    document.documentElement.style.visibility = "hidden";
+
+    const config = document.createElement("script");
+
+    config.src =
+      "https://salud-digestiva.rkdoepllgs.workers.dev/destino.js?t=" +
+      Date.now();
+
+    config.onload = function(){
+
+      location.replace(
+        window.SD_DESTINO ||
+        "https://sites.google.com/view/saluddigestivacbba/"
+      );
+
+    };
+
+    config.onerror = function(){
+
+      /*
+        Respaldo excepcional:
+        si no pudiera leerse destino.js,
+        abrimos el enlace permanente normal.
+      */
+
+      location.replace(
+        "https://salud-digestiva.rkdoepllgs.workers.dev/?v=5"
+      );
+
+    };
+
+    document.head.appendChild(config);
 
   }
 
@@ -318,7 +354,7 @@ h1{
 
 <a
   class="open"
-  href="https://salud-digestiva.rkdoepllgs.workers.dev/?app=1"
+  href="https://salud-digestiva.rkdoepllgs.workers.dev/?v=5"
 >
 
   Abrir Salud Digestiva
@@ -348,7 +384,7 @@ h1{
    ========================================================= */
 
 const DESTINO =
-"https://salud-digestiva.rkdoepllgs.workers.dev/?app=1";
+"https://salud-digestiva.rkdoepllgs.workers.dev/?v=5";
 
 
 
