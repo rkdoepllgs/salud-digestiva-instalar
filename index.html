@@ -41,44 +41,14 @@
   if(params.get("launch") === "1"){
 
     /*
-      La app instalada NO visita la página visible del Worker.
-      Solo consulta el archivo central destino.js.
-      Así se conserva la pantalla inicial con el icono
-      y se evita por completo la tarjeta intermedia.
+      Apertura desde la app ya instalada.
+      Se usa un puente invisible del Worker.
+      No se carga la tarjeta visible del QR/WhatsApp.
     */
 
-    document.documentElement.style.visibility = "hidden";
-
-    const config = document.createElement("script");
-
-    config.src =
-      "https://salud-digestiva.rkdoepllgs.workers.dev/destino.js?t=" +
-      Date.now();
-
-    config.onload = function(){
-
-      location.replace(
-        window.SD_DESTINO ||
-        "https://sites.google.com/view/saluddigestivacbba/"
-      );
-
-    };
-
-    config.onerror = function(){
-
-      /*
-        Respaldo excepcional:
-        si no pudiera leerse destino.js,
-        abrimos el enlace permanente normal.
-      */
-
-      location.replace(
-        "https://salud-digestiva.rkdoepllgs.workers.dev/?v=5"
-      );
-
-    };
-
-    document.head.appendChild(config);
+    location.replace(
+      "https://salud-digestiva.rkdoepllgs.workers.dev/app.html"
+    );
 
   }
 
